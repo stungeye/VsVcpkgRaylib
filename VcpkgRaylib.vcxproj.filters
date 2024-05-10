@@ -18,5 +18,16 @@
     <ClCompile Include="VcpkgRaylib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rlImGui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="rlImGui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_raylib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

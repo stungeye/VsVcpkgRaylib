@@ -13,6 +13,8 @@
 ********************************************************************************************/
 
 #include "raylib.h"
+#include "imgui.h"
+#include "rlImGui.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -29,13 +31,17 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth{ 1280 };
+    const int screenHeight{ 720 };
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    SetTargetFPS(120);               // Set our game to run at 60 frames-per-second
+    rlImGuiSetup(true);
     //--------------------------------------------------------------------------------------
+	bool open{ true };
+	float scale{ 35.0f };
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -52,6 +58,17 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         DrawText("Congrats! You created your first window!", 190, 200, 20, DARKGRAY);
+        DrawCircle(screenWidth / 5, 120, scale, DARKBLUE);
+
+		rlImGuiBegin();
+		if (open) ImGui::ShowDemoWindow(&open);
+        
+        ImGui::Begin("Scale the Circle", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::SliderFloat("Circle Radius", &scale, 5.0f, 70.0f);
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+        ImGui::End();
+
+		rlImGuiEnd();
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -59,6 +76,7 @@ int main(void)
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
+    rlImGuiShutdown();		// cleans up ImGui
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 

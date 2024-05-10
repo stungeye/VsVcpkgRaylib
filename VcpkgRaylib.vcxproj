@@ -133,7 +133,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="rlImGui.cpp" />
     <ClCompile Include="VcpkgRaylib.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="imgui_impl_raylib.h" />
+    <ClInclude Include="rlImGui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
