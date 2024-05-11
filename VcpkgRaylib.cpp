@@ -15,6 +15,8 @@
 #include "raylib.h"
 #include "imgui.h"
 #include "rlImGui.h"
+#include <vector>
+#include <algorithm>
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -31,8 +33,8 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth{ 1280 };
-    const int screenHeight{ 720 };
+    int screenWidth{ 1280 };
+    int screenHeight{ 720 };
 
     // Config Flags: 
 	// FLAG_MSAA_4X_HINT: Enable Multi Sampling Anti Aliasing 4x (if available).
@@ -53,6 +55,18 @@ int main(void)
 	bool open{ true };
 	float scale{ 35.0f };
 
+	// Create velocity vector for the squares
+
+
+	int numberOfSquares{ 500 };
+	std::vector<Rectangle> squares;
+	std::vector<Vector2> squareVelocities;
+	// Create a vector of squares of size scale at random positions
+    for (int i = 0; i < numberOfSquares; i++) {
+		squares.push_back({ (float)GetRandomValue(0, screenWidth - scale), (float)GetRandomValue(0, screenHeight - scale), scale, scale });
+		squareVelocities.push_back({ (float)GetRandomValue(-5, 5), (float)GetRandomValue(-5, 5) });
+    }
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -60,6 +74,10 @@ int main(void)
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
+
+		// Update screen width and height if the window is resized
+		screenWidth = GetScreenWidth();
+		screenHeight = GetScreenHeight();
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -82,11 +100,49 @@ int main(void)
 			}
 		}
 
+		// If nubmerOfSquares has changed, resize the vectors
+		if (numberOfSquares != squares.size()) {
+			if (numberOfSquares > squares.size()) {
+				for (int i = squares.size(); i < numberOfSquares; i++) {
+					squares.push_back({ (float)GetRandomValue(0, screenWidth - scale), (float)GetRandomValue(0, screenHeight - scale), scale, scale });
+					squareVelocities.push_back({ (float)GetRandomValue(-5, 5), (float)GetRandomValue(-5, 5) });
+				}
+			}
+			else {
+				squares.resize(numberOfSquares);
+				squareVelocities.resize(numberOfSquares);
+			}
+		}
+
+		// Resize and draw the squares.
+		for (int i = 0; i < numberOfSquares; i++) {
+			squares[i].width = scale;
+			squares[i].height = scale;
+
+			// Move the squares
+            squares[i].x += squareVelocities[i].x;
+			squares[i].y += squareVelocities[i].y;
+
+			// Bounce the squares off the walls, with boundary constraints in case they go off screen.
+			if (squares[i].x < 0 || squares[i].x + squares[i].width > screenWidth) {
+				squareVelocities[i].x *= -1;
+				squares[i].x = std::clamp(squares[i].x, 0.0f, (float)screenWidth - squares[i].width);
+			}
+			if (squares[i].y < 0 || squares[i].y + squares[i].height > screenHeight) {
+				squareVelocities[i].y *= -1;
+				squares[i].y = std::clamp(squares[i].y, 0.0f, (float)screenHeight - squares[i].height);
+			}
+
+
+			DrawRectangleRec(squares[i], RED);
+		}
+
 		rlImGuiBegin();
 		if (open) ImGui::ShowDemoWindow(&open);
         
         ImGui::Begin("Scale the Circle", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::SliderFloat("Circle Radius", &scale, 5.0f, 70.0f);
+        ImGui::SliderInt("Square Count", &numberOfSquares, 1, 1000000);
         ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
         ImGui::End();
 
