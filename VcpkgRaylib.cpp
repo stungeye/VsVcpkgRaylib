@@ -57,8 +57,20 @@ int main(void)
 
         ClearBackground(RAYWHITE);
 
-        DrawText("Congrats! You created your first window!", 190, 200, 20, DARKGRAY);
-        DrawCircle(screenWidth / 5, 120, scale, DARKBLUE);
+		// Draw a circle that we can click on to toggle the ImGui demo window.
+        // Circle radius will be controlled by a second ImGui window.
+		int circleX = screenWidth / 5;
+		int circleY = 120;
+        DrawCircle(circleX, circleY, scale, DARKBLUE);
+		DrawText("Click me!", circleX - 40, circleY + scale + 20, 20, DARKGRAY);
+
+        // Toggle the ImgGui demo window if we click on the circle:
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			Vector2 mousePos = GetMousePosition();
+			if (CheckCollisionPointCircle(mousePos, { (float)circleX, (float)circleY }, scale)) {
+				open = !open;
+			}
+		}
 
 		rlImGuiBegin();
 		if (open) ImGui::ShowDemoWindow(&open);
