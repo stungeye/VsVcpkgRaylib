@@ -34,10 +34,20 @@ int main(void)
     const int screenWidth{ 1280 };
     const int screenHeight{ 720 };
 
+    // Config Flags: 
+	// FLAG_MSAA_4X_HINT: Enable Multi Sampling Anti Aliasing 4x (if available).
+	// FLAG_VSYNC_HINT: Enable V-Sync to synchronize frame rate with monitor refresh rate.
+    // FLAG_WINDOW_RESIZABLE: Window is resizable by user.
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-    SetTargetFPS(120);               // Set our game to run at 60 frames-per-second
+	// Initialize window to a specific width and height, with a title.
+    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+ 
+    
+    // Set our app to run at 120 frames-per-second
+    SetTargetFPS(120);
+    
+	// Setup ImGui Backend
     rlImGuiSetup(true);
     //--------------------------------------------------------------------------------------
 	bool open{ true };
