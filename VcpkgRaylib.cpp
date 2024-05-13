@@ -142,8 +142,8 @@ int main(void)
         
         ImGui::Begin("Scale the Circle", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::SliderFloat("Circle Radius", &scale, 5.0f, 70.0f);
-        ImGui::SliderInt("Square Count", &numberOfSquares, 1, 1000000);
-        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+        ImGui::SliderInt("Square Count", &numberOfSquares, 1, 150000);
+        ImGui::Text("ImGui FPS: %.1f Raylib FPS: %d", ImGui::GetIO().Framerate, GetFPS());
         ImGui::End();
 
 		rlImGuiEnd();
